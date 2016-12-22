@@ -21,6 +21,12 @@ describe DocumentSearcher do
       end
     end
 
+    context 'if search_document file does not exist or is not readable' do
+      it 'raises an exception' do
+        expect {DocumentSearcher.new(search_document: './this_doesnt_exist.txt')}.to raise_error(RuntimeError)
+      end
+    end
+
     context 'if document is empty' do
       it 'returns false' do
         @tempfile = Tempfile.new('test')
@@ -75,7 +81,7 @@ describe DocumentSearcher do
       it 'returns true' do
         document_searcher = DocumentSearcher.new(search_document: @tempfile)
         search_result = document_searcher.search_for_localized_terms(search_term_one: 'this', search_term_two: 'test', search_term_distance: 5)
-        expect(search_result).to eq(true)
+        expect(search_result).to be_a(String)
       end
     end
   end

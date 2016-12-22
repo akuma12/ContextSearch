@@ -2,7 +2,11 @@ class DocumentSearcher
   def initialize(search_document:)
 
     if search_document.is_a? String
-      @search_document = File.open(search_document)
+      begin
+        @search_document = File.open(search_document)
+      rescue
+        raise "File #{search_document} does not exist or is not readable."
+      end
     elsif search_document.is_a? File or search_document.is_a? Tempfile
       @search_document = search_document.open
     else
@@ -14,6 +18,8 @@ class DocumentSearcher
     search_document_string = @search_document.read.downcase
     search_term_one = search_term_one.downcase
     search_term_two = search_term_two.downcase
+
+    @search_document.close
 
     if search_document_string.size <= 0
       return false
@@ -39,6 +45,6 @@ class DocumentSearcher
 
     m = search_document_string.match(/\b(?:#{search_term_one}\W+(?:\w+\W+){1,#{search_term_distance}}?#{search_term_two}|#{search_term_two}\W+(?:\w+\W+){1,#{search_term_distance}}?#{search_term_one})\b/)
 
-    m.nil? ? false : m
+    m.nil? ? false : m.to_s
   end
 end

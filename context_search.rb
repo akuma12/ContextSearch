@@ -28,5 +28,5 @@ end.parse!
 Dir.glob("#{@directory_to_search}/*").each do |file|
   document_searcher = DocumentSearcher.new(search_document: file)
   search_result = document_searcher.search_for_localized_terms(search_term_one: @search_term_one, search_term_two: @search_term_two, search_term_distance: @search_term_distance)
-  puts "'#{search_result.to_s}' found in file #{file}" if search_result
+  puts "'#{search_result}' found in file #{file}" if search_result
 end
